@@ -1,5 +1,7 @@
 package com.simplileaern.testng;
 
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -29,16 +31,8 @@ public class GroupTest {
 		driver.findElement(By.id("email")).sendKeys("nikunj@gmail.com");
 		driver.findElement(By.id("pass")).sendKeys("Nikunj@123");
 		driver.findElement(By.name("login")).submit();
-		
-		try {
-			Thread.sleep(3000);
-			driver.close();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
+
+		driver.close();
 	}
 	
 	
@@ -47,32 +41,25 @@ public class GroupTest {
 	@Test(groups="Firefox")
 	public void launchFirefox() {
 		
-		System.setProperty("webdriver.gecko.driver", "firfox_driver_path");			
+		System.setProperty("webdriver.gecko.driver", "D:\\Phase-5\\geckodriver-v0.31.0-win64_new\\geckodriver.exe");			
 		driver = new FirefoxDriver();
+		
+		 
+		driver.manage().timeouts().setScriptTimeout(30, TimeUnit.SECONDS);
+		 
+		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 		driver.get("https://www.facebook.com/");
 		
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		 
 	}
-	@Test(groups="Chrome",dependsOnMethods = {"launchFirefox"})
+	@Test(groups="Firefox",dependsOnMethods = {"launchFirefox"})
 	public void loginwithFirefox() {
 		
+		 
 		driver.findElement(By.id("email")).sendKeys("nikunj@gmail.com");
 		driver.findElement(By.id("pass")).sendKeys("Nikunj@123");
 		driver.findElement(By.name("login")).submit();
-		
-		try {
-			Thread.sleep(3000);
-			driver.close();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		driver.close();
 		
 	}
 	
