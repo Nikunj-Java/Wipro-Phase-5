@@ -1,0 +1,30 @@
+1.  download jenkins.war file from
+		links: https://www.jenkins.io/download
+		(don't choose windows installer)
+2. move  your jenkins.was file to 
+		C:/ProgramFile
+3.  open cmd  and  move to  C:/ProgramFile
+> cd ..
+> cd ..
+> cd ProgramFiles
+
+4. Check the java Version
+	-if you have java 8 or 11 jenkins will support
+
+> java -jar jenkins.war
+	
+	-else you are working with higher version download java  8  
+> .<path of java 8>\ java -jar jenkins.war
+
+eg: .\Java\jdk1.8.0_202\bin\java -jar jenkins.war
+	 
+
+5.ONCE INSTALLATION IS DONE YOU WILL GET SECREAT ADMIN PASSWORD
+	COPY THAT PASSWORD  AND OPEN BROWSER
+	localhost:8080
+	paste the password in password filed
+	click> NEXT
+
+6. Select Install  Suggested Plugins
+7. Add Personal Details
+
