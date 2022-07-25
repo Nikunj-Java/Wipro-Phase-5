@@ -1,0 +1,81 @@
+************************************************************************************************
+1. CONNECT LLOCALMACHINE TO AWS EC2 INSTANCE
+************************************************************************************************
+
+1. Goto> LAB
+2. Prpare AWS Instance with Required Configurations> Download The Key Value pair and save it to 	some desire directory
+3. to  connect AWS EC2 Instance with your local machine you need todownload Moba x-term
+4. link: https://mobaxterm.mobatek.net/
+
+5. open moba x-term  and move to  the root directory where you have saved  .pem file
+
+
+6.  goto>  aws>  instance>choose your instance> connect> SSH> copy the  example key
+
+7.open moba xterm and paste that key
+
+
+-----------------------------------------------------------------------------------------------
+2.PREPARE  INDEX.HTML PAGE
+-----------------------------------------------------------------------------------------------
+
+> sudo su -
+> yum install  httpd -y
+> cd /var/www/html
+> vi index.html
+
+press 'i' to insert into  htmlpage
+
+> <h1>Welcome to AWSCloud</h1>
+
+press 'esc'
+
+> :wq!
+
+> service httpd start 
+
+>curl localhost
+
+this will print the content of htmlpage
+
+************************************************************************************************
+3. Attach EBS Volume And Formatting
+************************************************************************************************
+
+
+1. prepare new EBS volume from the same region from where you had  prepared the instance
+2. connect the instance using moba x- term
+
+3.List of Available  disk
+
+>lsblk
+
+4.to check if the volume has any data or not ?
+
+> sudo file-s /dev/xvdf
+
+5. to formate drive to ext4 partition system
+
+> sudo mkfs -t etx4 /dev/xvdf
+
+6. to change the  name of directory
+
+> sudo mkdir /newvolume
+
+7. to mount the drive
+> sudo mount /dev/xvdf /newvolume/
+
+8. to check the disk space 
+
+>cd /newvolume
+
+9. to check how much percent disk is in use
+>df -h .
+
+10. to check list of available disk
+>lsblk  (you will see newvolume name in list)
+
+11. to unmount the drive
+
+> cd..
+> sudo umount /dev/xvdf
