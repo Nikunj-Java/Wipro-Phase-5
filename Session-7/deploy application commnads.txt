@@ -1,0 +1,37 @@
+
+1. Prepare AWS instance
+2. Security : Add port no. 8080 with Custom TCP  rule
+3. Download .pem key and  connect using moba x-term
+4. goto> eclips> choose  your APP> (App  buildon JDK 8) rightclick on it and run as mavan clean and maven install
+and maven build
+
+goto 
+> target folder and copy
+
+
+APLLICATIONNAME-SNAPSHOT-0.0.1.jar file and drag it to the moba x-termleft sidewindow
+
+
+now execute below commands
+
+---------installing java
+
+1. sudo -i
+2. yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
+
+
+------------installing maven
+
+1. sudo -i
+2. yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel maven git
+
+
+
+---------run the app
+
+jav -jar APLLICATIONNAME-SNAPSHOT-0.0.1.jar
+
+
+once tomcat is started
+
+copy your AWS EC2 instance public ipaddress:8080 in browser you willsee the output
