@@ -1,0 +1,94 @@
+***********************************************************************************************************
+STEP:1 AWS EC2 UBUNTU INSTANCE
+***********************************************************************************************************
+> Create 2 AWS UBUNTU Instance
+> make one  as Master and Another As Worker
+> copy Private Ip  of Master and worker's  Node
+***********************************************************************************************************
+STEP:2 install docker in both the instance
+***********************************************************************************************************
+> sudo apt-get update
+> sudo apt-get install ca-certificates curl gnupg lsb-release
+> sudo mkdir -p /etc/apt/keyrings
+> curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+> echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+> sudo apt-get update
+> sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+
+---TO VEIFY DOCKER VERSION----
+
+> sudo docker -v
+		output: Docker version 20.10.17, build 100c701
+
+***********************************************************************************************************
+STEP:3 EDIT /etc/host file to define master and worker Node's Ip
+***********************************************************************************************************
+
+FOR MASTER NODE:
+	GOTO>AWS>EC2>MASTERNODE-INSTACE> CONNECT >SSH> COPY THE KEY AND CONNECT USING MOBAX-TERM
+> sudo vi /etc/hosts
+
+>press 'i' key
+
+> copy_master_node_private_ip  master
+
+eg: 192.168.0.1 master
+
+> press 'esc'
+> :wq!  
+> ping master
+
+if ping started means all going right
+to stop the ping pres 'ctr+c'
+
+
+FOR WORKER NODE:
+----------------
+	GOTO>AWS>EC2>WORKER-NODE-INSTACE> CONNECT >SSH> COPY THE KEY AND CONNECT USING MOBAX-TERM
+> sudo vi /etc/hosts
+
+>press 'i' key
+
+> copy_worker_node_private_ip  worker
+
+eg: 192.168.0.1 worker
+
+> press 'esc'
+> :wq!  
+> ping worker
+
+if ping started means all going right
+to stop the ping pres 'ctr+c'
+
+
+**********************************************************************
+STEP: 4 SWARM INITIALIZATION IN MASTER NODE
+**********************************************************************
+> sudo docker swarm init --advertise-adr <IP_ADDREE_OF_MASTER_NODE>
+EG:  sudo docker swarm init --advertise-adr 172.31.90.56
+		(here 172.31.90.56 is myIp for Docker master instance)
+or if error is there 
+
+>  sudo docker swarm init
+
+
+you will  get one token just copy that and go to the worker node with applying 'sudo' at the begining
+
+for me token was:
+
+docker swarm join --token SWMTKN-1-4qpusz64qiq652zyzwszi28mlrjxm5f7zkb9j5nqhgyqqlngb4-073ocpmow1qwahv23nu86mdau 172.31.90.56:2377
+
+
+so i had used
+> sudo docker swarm join --token SWMTKN-1-4qpusz64qiq652zyzwszi28mlrjxm5f7zkb9j5nqhgyqqlngb4-073ocpmow1qwahv23nu86mdau 172.31.90.56:2377
+
+
+
+goto>master node
+
+
+>  sudo docker node ls
+
+once worker will join the swarm you will see  the two  names in the list
