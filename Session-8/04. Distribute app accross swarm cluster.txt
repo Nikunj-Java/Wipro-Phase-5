@@ -67,7 +67,7 @@ to stop the ping pres 'ctr+c'
 STEP: 4 SWARM INITIALIZATION IN MASTER NODE
 **********************************************************************
 > sudo docker swarm init --advertise-addr <IP_ADDREE_OF_MASTER_NODE>
-EG:  sudo docker swarm init --advertise-addr 172.31.90.56
+EG:  sudo docker swarm init --advertise-addr 172.31.90.56 
 		(here 172.31.90.56 is myIp for Docker master instance)
 or if error is there 
 
@@ -92,3 +92,16 @@ goto>master node
 >  sudo docker node ls
 
 once worker will join the swarm you will see  the two  names in the list
+
+
+************************************************************************************************
+STEP:5 SERVICE WITH REPLICAS
+************************************************************************************************
+
+>sudo docker service create --name myclusterdemo --publish 8081:8081 --replicas 2 myimage  
+
+--to check runnig service---
+
+>sudo docker  service  ps myclusterdemo
+
+>
