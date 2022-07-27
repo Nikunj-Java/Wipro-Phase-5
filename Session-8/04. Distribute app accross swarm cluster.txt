@@ -67,7 +67,7 @@ to stop the ping pres 'ctr+c'
 STEP: 4 SWARM INITIALIZATION IN MASTER NODE
 **********************************************************************
 > sudo docker swarm init --advertise-addr <IP_ADDREE_OF_MASTER_NODE>
-EG:  sudo docker swarm init --advertise-adr 172.31.90.56
+EG:  sudo docker swarm init --advertise-addr 172.31.90.56
 		(here 172.31.90.56 is myIp for Docker master instance)
 or if error is there 
 
