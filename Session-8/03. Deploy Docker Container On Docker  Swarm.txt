@@ -1,0 +1,47 @@
+***********************************************************************************************************
+Deploy a docker container on docker swarm
+***********************************************************************************************************
+we have already prepared one image 'myimage' pulled from git hub and pushed to docker hub
+continue......
+-----------------------------------------------------------------------------------------------------------
+
+
+docker swarm: managing multiple  containers running on different host
+where we will  initiate a swarm that node will become leader(Master)  andanother can join this node  
+and you can use this  as Worker node
+
+-----------------------------------------------------------------------------------------------------------
+to set the permission
+
+> sudo chmod 666 /var/run/docker.sock
+
+Step: 1   initiate a docker swarm
+
+	> docker swarm init (machine will become leader node)
+you will  get one token using that you can connect worker for  token is below
+
+ docker swarm join --token SWMTKN-1-2kdo9amnuholq19u5o1h6enxs82avq60z3s1enlghw480qm6m0-4cn1xvuy5sxmr593yjwz2dhpd 172.31.95.190:2377
+
+
+
+	> docker node ls    (see the status of your node)
+Step: 2 Create Service in this docker swarm
+	> docker service create  -p 80:80 --name myservice myimage	
+	> curl localhost  (you  will see imdex.html page on mobax-term)
+
+		also you can copy your aws ubuntu instance publicip:80 on browser to check the output
+
+	----to see  the running service-------------
+	> docker service ls
+
+
+Step: 3 Scale Docker Container on DOcker Swarm
+
+
+	> docker service ps myservice (name of your service)
+
+
+	---to  scale the service---
+	> docker service scale myservice=3
+	> docker service ls
+	> docker service ps myservice
