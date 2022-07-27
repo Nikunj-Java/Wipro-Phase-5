@@ -1,0 +1,82 @@
+************************************************************************************************
+Jenkins with docker
+************************************************************************************************
+
+**********to set up jenkins follow the below steps******************
+
+step-1: create AWS ubuntu instance and connect it by using SSH from your local machine & the install ubuntu os***************************************
+
+step-2: install jdk 
+
+step-3: install maven 
+
+step-4: install jenkins 
+
+
+
+
+
+************************************************************************************************
+step-1: install docker on ubuntu instance
+************************************************************************************************
+
+	
+	> sudo apt-get update
+	> sudo apt-get install ca-certificates curl gnupg lsb-release
+	> curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+	> echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	> sudo apt-get update
+	> sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+
+
+	*****to verify docker installation*****************
+	> sudo docker -v
+			or
+	> sudo docker --version
+			or
+	> sudo docker info
+
+
+
+	******list docker container*********
+	> sudo docker container ls
+			or
+	> sudo docker ps -a
+
+
+
+
+
+
+
+************************************************************************************************
+step-2: install jdk
+************************************************************************************************
+	> sudo apt-get update
+	> sudo apt install default-jdk -y
+************************************************************************************************
+step-3: install maven
+************************************************************************************************
+	> sudo apt install maven -y
+
+***********************************************************************************************
+step-4: install jenkins
+	Goto>google>how to download jenkins in ubuntu
+
+
+	> curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+	> echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+	> sudo apt-get update
+	> sudo apt-get install jenkins
+
+----To start jenkins service----
+	> sudo service jenkins start
+	> sudo servicejenkins status
+
+
+now goto AWS EC2 Instance>  Copy public ip  Address> go to the browser and type as mentioned below
+			eg: Public_Ip_Address:8080
+
+
