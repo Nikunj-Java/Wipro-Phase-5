@@ -1,0 +1,233 @@
+******************************************************************************************************
+STEP:1 PREPARING AWS UBUNTU INSTANCE 
+******************************************************************************************************
+
+Follow Below Steps to Prepare AWS Instance
+
+1. prepare Ubuntuserver 22.04 LTS(HVM) SSD volumetype instance
+2. customprotocol for port : 8080
+3. download .pem key to  the desired location
+4. connect using mobaXterm (move to the root directory where you have saved .pem key) 
+
+
+******************************************************************************************************
+STEP:2  DOCKER INSTALLATION ON UBUNTU OS
+******************************************************************************************************
+
+> sudo apt-get update
+> sudo apt-get install ca-certificates curl gnupg lsb-release
+> sudo mkdir -p /etc/apt/keyrings
+> curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+> echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+> sudo apt-get update
+> sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+
+---TO VEIFY DOCKER VERSION----
+
+> sudo docker -v
+		output: Docker version 20.10.17, build 100c701
+or
+
+> sudo docker --version
+
+> sudo docker info
+
+
+----TO LIST DOCKER CONTAINERS-------
+
+> sudo docker container ls
+
+or
+
+> sudo docker ps -a
+
+
+----TO LIST DOCKER IMAGES-----------
+> sudo docker images
+
+----TO CHECK CONTAINER  VOLUME------
+
+> sudo docker volume ls
+
+
+
+
+******************************************************************************************************
+STEP:3 KUBERNETES INSTALLATION
+******************************************************************************************************
+GOTO GOOGLE> SEARCH FOR: kubernates installation on ubuntu os
+
+link:https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+
+> sudo apt-get update
+> sudo apt-get install -y apt-transport-https ca-certificates curl
+
+
+> sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+> echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+
+> sudo apt-get update
+> sudo apt-get install -y kubelet=1.22.8-00 kubeadm=1.22.8-00 kubectl=1.22.8-00
+> sudo apt-mark hold kubelet kubeadm kubectl
+
+
+1. to check the version
+> kubelet --version
+> kubeadm version
+> kubectl version
+
+***************************************************************************************************************
+STEP: 4 DISBLING SWAPP
+***************************************************************************************************************
+> sudo swapoff -a
+> sudo sed -i '/ swap / s/^/#/' /etc/fstab
+
+***************************************************************************************************************
+STEP: 5 ADDING A C-GROUP 
+***************************************************************************************************************
+
+EDIT THE DOCKER DAEMON FILE
+
+> sudo vi /etc/docker/daemon.json
+press 'i' and insert the  below  mentioned command
+
+{
+"exec-opts":["native.cgroupdriver=systemd"]
+}
+
+press 'esc'
+> :wq!
+
+hit enter
+once the file updated we need to  restart the service
+
+> sudo systemctl daemon-reload && sudo systemctl restart docker && sudo systemctl restart kubelet
+> sudo docker info |grep -i cgroup
+
+you will  get message like this
+-----------------------------------
+ Cgroup Driver: systemd
+ Cgroup Version: 2
+ cgroupns
+
+------------------------------------
+
+
+***************************************************************************************************************
+STEP:6  INTIALIZING KUBERNETES CLUSTER
+***************************************************************************************************************
+
+>sudo kubeadm init
+or 
+>sudo kubeadm init --ignore-preflight-errors=all
+
+
+if  all will be okyou  will get message that
+
+			:Your Kubernetes control-plane has initialized successfully!
+
+also you will get some set of commands in CLI as below
+-------------------------------------------------------
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 172.31.87.163:6443 --token np7vaz.895o0ejc3hh25y2l \
+        --discovery-token-ca-cert-hash sha256:b827a4d14e237077c948d4fa681a61f1ea9397398fe139d96715d1afe85b06ba
+
+[notes: to  prepare worker  node  follow  STEP-1 TO STEP-5 AND then copy paste the token  on worker node with 'sudo your_token ]
+
+executes all the commands line by line
+-------------------------------------------------------------
+
+
+1. to get node details
+> kubectl  get node
+
+2. get cluster details
+> kubectl get svc
+
+3. deploy any app/code on cluster(This will work only if cluster is started)
+
+let's deploy weve network to cluster
+
+> export kubever=$(kubectl version | base64 | tr -d '\n')
+> kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
+
+4. validate running pods
+
+> kubectl get pods --all-namespaces
+
+***************************************************************************************************************
+STEP:7 HOST A SPRING BOOT APPLICATION IN KUBERNATES PODS
+***************************************************************************************************************
+
+FOR SPRINGBOOT APPLICATION
+1. MAVEN INSTALLATION
+2. JDK INSTALLATION
+3. CLONE YOUR APP FROM GITHUB
+
+1. MAVEN INSTALLTION
+-------------------------------
+>  sudo apt-get update
+>  sudo apt install maven -y
+
+2. JDK INSTALLATION
+-------------------------------
+> sudo apt-get update
+> sudo apt install default-jdk -y
+
+3. CLONE YOUR APP
+
+> git clone https://github.com/Nikunj-Java/SpringBootDockerApp.git
+
+
+4. CHANGE THE DIRECTORY
+> cd SpringbootDockerApp/
+
+5. CREATE JAR FILE
+> mvn clean install
+
+
+5.BUILD DOCKER IMAGE
+
+> sudo docker build -t springboot .
+> sudo docker images
+
+6. CUBE PROXY
+> kubectl run springbootapp --image=springboot --port=8082
+
+you will get msg that: pod/springbootapp created
+
+> kubectl get pods
+
+7.CREATE DEPLOYMENT SERVICE
+
+>kubectl expose pod/springbootapp --port=8082 --target-port=8082 --type=LoadBalancer
+
+
+you will  get message that : service/springbootapp exposed
+
+1. TO GET LIST OFSERVICES RUNNING
+----------------------------------
+> kubectl get service
+
+2.TO GET DETAILED DESCRIPTION OF APP RUNNING ON POD
+---------------------------------------------------
+> kubectl describe svc springbootapp
+
+
+
+
+
+
