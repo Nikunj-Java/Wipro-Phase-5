@@ -79,4 +79,37 @@ step-4: install jenkins
 now goto AWS EC2 Instance>  Copy public ip  Address> go to the browser and type as mentioned below
 			eg: Public_Ip_Address:8080
 
+---to get secreat password
 
+	> sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+	> sudo chmod 777 /var/run/docker.sock
+
+******************************************************************************************************
+1. click on install  suggested plugins
+
+2. provide your credentials
+
+3.  welcome to jenkins
+
+
+4.  goto> dashboard> create>new job> select freestyleproject> give name >click  ok
+
+5. Give Description
+6. sourcecode and management
+
+	GIT:
+	Url: https://github.com/Nikunj-Java/docker_master.git
+	Branches to build:*/master
+
+7. Build Trigger:
+	POLL HSM:
+	H/2 * * * *
+
+8.  CLICK ON APPLY AND  SAVE
+
+9. BUILD THE PROJECT
+
+NOW  your Continuous integration is done
+
+
+once any file of your gut hub has commitedchanges jenkins will  automatically build the project in upto 1-5min and you will  observe that in jenkins dashboard, not only that but you will get Email-notification if enabled
